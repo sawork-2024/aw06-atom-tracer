@@ -1,0 +1,174 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: Orders
+  license:
+    name: MIT
+paths:
+  /ordersService/order/{orderId}:
+    get:
+      summary: get order by orderId
+      operationId: getOrder
+      tags:
+        - order
+      parameters:
+        - name: orderId
+          in: path
+          required: true
+          description: The id of the order to retrieve
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: a specific order
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Order"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /ordersService/add/{productId}:
+    post:
+      summary: Increase the product amount by 1
+      operationId: addProduct
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          description: The id of the product to retrieve
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                type: boolean
+                example: true
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /ordersService/delete/{productId}:
+    post:
+      summary: Decrease the product amount by 1
+      operationId: deleteProduct
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          description: The id of the product to retrieve
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                type: boolean
+                example: true
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /ordersService/checkout:
+    get:
+      summary: checkout now cart and creat a new cart
+      operationId: checkCart
+      tags:
+        - item
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                type: boolean
+                example: true
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+components:
+  schemas:
+    Product:
+      type: object
+      required:
+        - pid
+        - name
+        - price
+        - category
+      properties:
+        pid:
+          type: string
+        name:
+          type: string
+        price:
+          type: number
+          format: double
+        category:
+          type: string
+        img:
+          type: string
+          nullable: true
+        stock:
+          type: integer
+          format: int32
+        quantity:
+          type: integer
+          format: int32
+    Item:
+      type: object
+      required:
+        - product
+        - amount
+      properties:
+        product:
+          $ref: '#/components/schemas/Product'
+        amount:
+          type: integer
+          format: int32
+    Order:
+      type: object
+      required:
+        - orderId
+        - items
+      properties:
+        orderId:
+          type: integer
+          format: int32
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Item'
+    Orders:
+      type: array
+      items:
+        $ref: "#/components/schemas/Order"
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string

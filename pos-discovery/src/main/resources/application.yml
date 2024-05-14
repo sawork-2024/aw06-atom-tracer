@@ -1,0 +1,20 @@
+server:
+  port: 8761
+
+eureka:
+  instance:
+    hostname: localhost
+  # standalone mode
+  client:
+    registerWithEureka: false # 这里设置为false，因为这个服务就是Eureka服务器，无需注册。
+    fetchRegistry: false # 是否从Eureka服务器获取注册信息，这里设置为false，因为这个服务就是Eureka服务器，无需获取。
+    serviceUrl:
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/ # 默认区域的Eureka服务器URL
+
+spring:
+  application:
+    name: dragonk_eureka_server # Spring Boot应用的名称
+  cloud:
+    config:
+      discovery:
+        enabled: false # 是否启用Spring Cloud Config的服务发现功能，这里设置为false，因为这个服务是Eureka服务器，无需发现其他服务。
